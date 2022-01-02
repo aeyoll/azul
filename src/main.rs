@@ -115,6 +115,10 @@ fn main() {
         .map(|entry| image::open(entry.path()).unwrap())
         .collect();
 
+    if images.len() % 2 != 0 && images.len() % 3 != 0 {
+        panic!("The input folder must have a multiple of 2 or 3 images.");
+    }
+
     let m = Mosaic::new(images, size);
     m.concat().save(output).unwrap();
 }
