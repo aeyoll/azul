@@ -20,11 +20,17 @@ fn main() {
 
     let glob = Glob::new("*.{jpeg,jpg,png}").unwrap().compile_matcher();
 
-    let images: Vec<DynamicImage> = fs::read_dir(input)
+    let mut images_path: Vec<_> = fs::read_dir(input)
         .unwrap()
         .into_iter()
         .filter_map(Result::ok)
         .filter(|entry| glob.is_match(entry.file_name()))
+        .collect();
+
+    images_path.sort_by_key(|f| f.path());
+
+    let images: Vec<DynamicImage> = images_path
+        .into_iter()
         .map(|entry| image::open(entry.path()).unwrap())
         .collect();
 
